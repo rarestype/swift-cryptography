@@ -18,6 +18,10 @@ let package: Package = .init(
         .target(
             name: "Cryptography",
             dependencies: ["OpenSSL"]
+        ),
+        .testTarget(
+            name: "CryptographyTests",
+            dependencies: ["Cryptography"]
         )
     ]
 )

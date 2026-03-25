@@ -19,21 +19,22 @@ extension RSA.PrivateKey {
         let unmanaged: OpaquePointer = try CryptographyError.do {
             /// we expect this to be a no-op, if the PEM string is already UTF-8
             var pem: String = copy pem
-            let bio: OpaquePointer? = pem.withUTF8 {
-                BIO_new_mem_buf($0.baseAddress, Int32.init($0.count))
-            }
+            return pem.withUTF8 {
+                guard
+                let bio: OpaquePointer = BIO_new_mem_buf(
+                    $0.baseAddress,
+                    Int32.init($0.count)
+                ) else {
+                    // the most common reason this fails is because the string provided was empty
+                    return nil
+                }
 
-            guard
-            let bio: OpaquePointer else {
-                // the most common reason this fails is because the string provided was empty
-                return nil
-            }
+                defer {
+                    BIO_free(bio)
+                }
 
-            defer {
-                BIO_free(bio)
+                return PEM_read_bio_PrivateKey(bio, nil, nil, nil)
             }
-
-            return PEM_read_bio_PrivateKey(bio, nil, nil, nil)
         }
 
         self.init(consuming: unmanaged)
@@ -42,20 +43,21 @@ extension RSA.PrivateKey {
     /// Parses raw DER-encoded binary data.
     public init(der: borrowing ArraySlice<UInt8>) throws(CryptographyError) {
         let unmanaged: OpaquePointer = try CryptographyError.do {
-            let bio: OpaquePointer? = der.withUnsafeBufferPointer {
-                BIO_new_mem_buf($0.baseAddress, Int32.init($0.count))
-            }
+            der.withUnsafeBufferPointer {
+                guard
+                let bio: OpaquePointer = BIO_new_mem_buf(
+                    $0.baseAddress,
+                    Int32.init($0.count)
+                ) else {
+                    return nil
+                }
 
-            guard
-            let bio: OpaquePointer else {
-                return nil
-            }
+                defer {
+                    BIO_free(bio)
+                }
 
-            defer {
-                BIO_free(bio)
+                return d2i_PrivateKey_bio(bio, nil)
             }
-
-            return d2i_PrivateKey_bio(bio, nil)
         }
 
         self.init(consuming: unmanaged)
