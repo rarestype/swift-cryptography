@@ -117,12 +117,12 @@ extension RSA.PrivateKey {
             var length: Int = .init(EVP_PKEY_get_size(self.object))
             let signature: [UInt8] = .init(unsafeUninitializedCapacity: length) {
                 if  case 1 = EVP_DigestSign(
-                    context,
-                    $0.baseAddress,
-                    &length,
-                    message.baseAddress,
-                    message.count
-                ) {
+                        context,
+                        $0.baseAddress,
+                        &length,
+                        message.baseAddress,
+                        message.count
+                    ) {
                     $1 = length
                 } else {
                     $1 = 0
