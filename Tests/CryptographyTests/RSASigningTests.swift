@@ -8,21 +8,32 @@ struct RSASigningTests {
     // A standard 2048-bit RSA Private Key for testing
     static let testPEM = """
     -----BEGIN PRIVATE KEY-----
-    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJbO79v4+V2WDU
-    8Hk/w+D5Pz+T0j8k5l6l+Jz0kQ/Zq4oWz3m5R9z8wW4oN8y3v4f9w5m7r1P+l2J9
-    yX0R+v6t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q+h2P8k0+T0v4n9
-    T5m8n+P8w7F/v6t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q+h2P8k0
-    +T0v4n9T5m8n+P8w7F/v6t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q
-    +h2P8k0+T0v4n9T5m8n+P8w7F/v6t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+
-    T8x2a8q+h2P8k0+T0v4n9T5m8n+P8w7F/v6t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v
-    8h8m4n+T8x2a8q+h2P8k0+T0v4n9T5m8n+P8w7FAgMBAAECggEAM0w6k1x8Z9T7
-    w4+n6p0v8h8m4n+T8x2a8q+h2P8k0+T0v4n9T5m8n+P8w7F/v6t2Y+l3j1F1r6l+
-    o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q+h2P8k0+T0v4n9T5m8n+P8w7F/v6t2Y+l3j
-    1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q+h2P8k0+T0v4n9T5m8n+P8w7F/v6
-    t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q+h2P8k0+T0v4n9T5m8n+P
-    8w7F/v6t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q+h2P8k0+T0v4n9
-    T5m8n+P8w7F/v6t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q+h2P8k0
-    +T0v4n9T5m8n+P8w7F/v6t2Y+l3j1F1r6l+o7p8m/P7Z8W9Y0v8h8m4n+T8x2a8q
+    MIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQC5Ap62HYzffzgr
+    9cqGJen0yfmu0Ut9R5Ct4jDV0dkBUdHdTjQOGF/ZlyphzTbgD5YmVO9zyOjeh2oB
+    ieug8/i+b2LdlX/6U6DCFiXCV460rKuvEYj1A3qj7mPZbpB2mABb7uxRO6OV0VM6
+    4gJ5Z3upOXQ+k1usPZn90Jk0M6PXCZedpwzPLgRmw3DpI02YzutQqI4HcSoMFWnQ
+    sGQWEsu6kOtpBWtkPNKKkAYlPym1Vg33nQ5x7N+03PckmoFkcyiik5wz/yKGfYpl
+    Vf5IqbkC6EfjT9ZBSg35IrU+j5KsW3COaQAs/GgHBxxbYHHPoNoDLRvoE3KJ5sjg
+    M8sP5ZLZAgMBAAECgf8VJi/+dGJTZntnP8hX9t909pK5+FEZzHZqtYdJCDQZNki/
+    zvwVVR1jq75/YJRHNfllDgVCa9rJlXUIxw4/I0pEmOB/sFOeFWm8EXG4CWhsezKO
+    ffKqD5YbGDvoandzj6Fr0eu5XYjkzC6v/XFpFRh+v87c3+x1NQ4Dk+uVMbtyaGzc
+    3PJl9+q9ANALsDhB/ak3JeipWpZo2eN9HKqlWlZqe/uBhVKaf0mmr3XsscYqI/2s
+    FVltEoDheuPtIBghFIQE/2iueM7tYQeZUfoHJBuCF+aDp2ouMPXoLAaejQQgL66K
+    9DT5ioWl8u5IRZmu9/JHV4cIPhMg6h+ClFf9eW8CgYEA66Zi4e7U4P869xI27RqH
+    VgShRgWcIj+IkMOofJuy0m4wBaZ93eN52e5w27mM92y650wgDuqvm25Ddhv7fYTJ
+    nIaes82fgNG4DhAPWP8yRhEje0ugSjfUNkL4Q0OfIYRP3YywrEasAjUsOKLVOmnI
+    jPBWWaQMxHZFiTwkAfccyL8CgYEAyPy4U0yiiYoxlPEoUYb8ZOxxvXOSA/NsIwG0
+    eKWvnrKJJq5uzw2HdeWvClOyxiuB3OwwZVS5o14oPe37t0p0TsZroNmmu0mlL9rV
+    jOMQ5OdDqzudpKQw8VpxA+La7nQ7kcZiyE1f3NSudaM3mIc0TXvc1Bc2XzBIV3TA
+    BPNEsmcCgYEAt2l0s0dR16GwAlfh+l/YkGHgKID7SkjLAWnYPMxuvYxXwj4Y31hL
+    Ig2NN+fOyVGOk7JTjWiqr759sXMMJmDxDuxUn7vedsREjmV/nJRcS97REAkHxFx5
+    xpYPZ0M9mzfBdb4oUJ5dCQbb2WUbs3BcUR5LB1BBQ7SOYMc3e3Qbqj8CgYB5XVGY
+    y0/iqdYi0DS+djp2XuiXs+/Z/uWvhdoKeFJCDCERgIdc9Bh2Msmt/LiZPbBfTSg0
+    KCMo6TR3oPs8xPLSlrJrIMKzmVbsPMJzHrIW5ydPgOJChvse4rQX2qbFEt7duePw
+    e/iFCtCGLJbnvczxdPf2AkZM2IT2eoNw+czjxQKBgBW0SAVDU4h3CwBM6LFJOAQu
+    gOm8F0MdF6LfAE84g5Ue42H5tWZBM/vpOFo+zPMgLpfjdbdrlaZkidOdalPisf5n
+    gQIp9hL/KG5OPeJ/KsRzdT8Z0OzLxkYdzRXNA41lDZIMClv2onIwwddx3LHjbwNb
+    Iiy487Lr3g8PqhxxVLVk
     -----END PRIVATE KEY-----
     """
 
@@ -43,10 +54,7 @@ struct RSASigningTests {
 
         // Assert that the CustomStringConvertible correctly allocated the 256-byte
         // buffer and pulled the C-string from OpenSSL.
-        let description = error.description
-        print(description)
-        #expect(description.contains("PEM routines") || description.contains("base64"),
-                "Description should contain the underlying OpenSSL failure reason.")
+        #expect("\(error)".contains("DECODER routines::unsupported"))
     }
 
     @Test(
