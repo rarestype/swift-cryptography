@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -euo pipefail
+
+MESSAGE="Swift Testing with OpenSSL"
+KEY_FILE="temp_test_key.pem"
+SIG_FILE="temp_signature.bin"
+MSG_FILE="temp_message.txt"
+
+echo "Generating RSA 2048-bit key (this might take a second)..." >&2
+openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out "$KEY_FILE" 2>/dev/null
+
+echo -n "$MESSAGE" > "$MSG_FILE"
+
+# Sign the message using PKCS#1 v1.5 padding and SHA-256
+openssl dgst -sha256 -sign "$KEY_FILE" -out "$SIG_FILE" "$MSG_FILE"
+
+echo ""
+echo "========================================"
+echo "🎯 SUCCESS: TEST VECTOR GENERATED"
+echo "========================================"
+echo ""
+echo "Copy and paste the following into your RSASigningTests.swift:"
+echo ""
+echo "let testMessage = Array(\"$MESSAGE\".utf8)"
+echo ""
+echo "let testPEM = \"\"\""
+cat "$KEY_FILE"
+echo "\"\"\""
+echo ""
+echo "let expectedLegacySignature: [UInt8] = ["
+# xxd -i automatically formats the binary data as a Swift-compatible array!
+xxd -i < "$SIG_FILE"
+echo "]"
+echo ""
+
+# Cleanup
+rm -f "$KEY_FILE" "$SIG_FILE" "$MSG_FILE"

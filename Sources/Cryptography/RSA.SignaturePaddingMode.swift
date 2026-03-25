@@ -10,8 +10,7 @@ extension RSA {
     }
 }
 extension RSA.SignaturePaddingMode {
-    /// FIXME: should not be public
-    public var mode: Int32 {
+    var mode: Int32 {
         switch self {
         case .pkcs1_legacy: RSA_PKCS1_PADDING
         case .pkcs1_pss: RSA_PKCS1_PSS_PADDING

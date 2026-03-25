@@ -17,11 +17,15 @@ let package: Package = .init(
         ),
         .target(
             name: "Cryptography",
-            dependencies: ["OpenSSL"]
+            dependencies: [
+                .target(name: "OpenSSL"),
+            ]
         ),
         .testTarget(
             name: "CryptographyTests",
-            dependencies: ["Cryptography"]
+            dependencies: [
+                .target(name: "Cryptography"),
+            ]
         )
     ]
 )

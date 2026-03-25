@@ -66,8 +66,23 @@ extension RSA.PrivateKey {
 extension RSA.PrivateKey {
     /// Signs an UnsafeRawBufferPointer using RSA PKCS#1 v1.5 padding and SHA-256.
     public func sign(
-        message: UnsafeRawBufferPointer,
-        padding: RSA.SignaturePaddingMode
+        hashing message: String,
+        padding: RSA.SignaturePaddingMode,
+        algorithm: CryptographyHashType = .sha512
+    ) throws -> [UInt8] {
+        var message: String = message
+        return try message.withUTF8 {
+            try self.sign(
+                hashing: UnsafeRawBufferPointer.init($0),
+                padding: padding,
+                algorithm: algorithm
+            )
+        }
+    }
+    public func sign(
+        hashing message: UnsafeRawBufferPointer,
+        padding: RSA.SignaturePaddingMode,
+        algorithm: CryptographyHashType = .sha512
     ) throws -> [UInt8] {
         try CryptographyError.do {
             guard
@@ -85,7 +100,7 @@ extension RSA.PrivateKey {
             guard case 1 = EVP_DigestSignInit(
                 context,
                 &publicKey,
-                EVP_sha256(),
+                algorithm.id,
                 nil,
                 self.object
             ),
@@ -119,6 +134,69 @@ extension RSA.PrivateKey {
             } else {
                 return signature
             }
+        }
+    }
+}
+extension RSA.PrivateKey {
+    public func verify(
+        signature: ArraySlice<UInt8>,
+        message: Substring,
+        padding: RSA.SignaturePaddingMode,
+        algorithm: CryptographyHashType,
+    ) throws -> Bool {
+        try signature.withUnsafeBytes { (signature: UnsafeRawBufferPointer) -> Bool in
+            var message: Substring = message
+            return try message.withUTF8 {
+                try self.verify(
+                    signature: signature,
+                    message: UnsafeRawBufferPointer.init($0),
+                    padding: padding,
+                    algorithm: algorithm
+                )
+            }
+        }
+    }
+
+    public func verify(
+        signature: UnsafeRawBufferPointer,
+        message: UnsafeRawBufferPointer,
+        padding: RSA.SignaturePaddingMode,
+        algorithm: CryptographyHashType,
+    ) throws -> Bool {
+        try CryptographyError.do {
+            guard
+            let digestContext: OpaquePointer = EVP_MD_CTX_new() else {
+                return nil
+            }
+
+            defer {
+                EVP_MD_CTX_free(digestContext)
+            }
+
+            var keyContext: OpaquePointer? = nil
+
+            guard case 1 = EVP_DigestVerifyInit(
+                digestContext,
+                &keyContext,
+                algorithm.id,
+                nil,
+                self.object
+            ),
+            let keyContext: OpaquePointer else {
+                return nil
+            }
+
+            guard EVP_PKEY_CTX_set_rsa_padding(keyContext, padding.mode) > 0 else {
+                return nil
+            }
+
+            return 1 == EVP_DigestVerify(
+                digestContext,
+                signature.baseAddress,
+                signature.count,
+                message.baseAddress,
+                message.count
+            )
         }
     }
 }
