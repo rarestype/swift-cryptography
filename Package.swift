@@ -7,6 +7,9 @@ let package: Package = .init(
     products: [
         .library(name: "Cryptography", targets: ["Cryptography"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/ordo-one/dollup", from: "1.0.1"),
+    ],
     targets: [
         .systemLibrary(
             name: "OpenSSL",
