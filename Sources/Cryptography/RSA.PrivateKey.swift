@@ -64,7 +64,6 @@ extension RSA.PrivateKey {
     }
 }
 extension RSA.PrivateKey {
-    /// Signs an UnsafeRawBufferPointer using RSA PKCS#1 v1.5 padding and SHA-256.
     public func sign(
         hashing message: String,
         padding: RSA.SignaturePaddingMode,

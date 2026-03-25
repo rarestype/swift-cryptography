@@ -85,7 +85,7 @@ import Testing
         #expect("\(error)".contains("DECODER routines::unsupported"))
     }
 
-    @Test static func EncryptDeterministicPKCS1() throws {
+    @Test static func SignDeterministicPKCS1() throws {
         let key: RSA.PrivateKey = try .init(pem: self.l)
         let computed: [UInt8] = try key.sign(
             hashing: "Swift Testing with OpenSSL",
@@ -126,7 +126,7 @@ import Testing
             .pkcs1_pss,
             .x931
         ] as [RSA.SignaturePaddingMode]
-    ) static func EncryptWithVerify(_ mode: RSA.SignaturePaddingMode) throws {
+    ) static func SignWithVerify(_ mode: RSA.SignaturePaddingMode) throws {
         let k: RSA.PrivateKey = try .init(pem: Self.k)
         let l: RSA.PrivateKey = try .init(pem: Self.l)
         let message: String = "Swift Testing with OpenSSL"
