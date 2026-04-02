@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-MESSAGE="Swift Testing with OpenSSL"
+MESSAGE="Oh how I love being a Barbie!"
 KEY_FILE="temp_test_key.pem"
 SIG_FILE="temp_signature.bin"
 MSG_FILE="temp_message.txt"
