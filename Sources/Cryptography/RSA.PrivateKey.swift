@@ -1,3 +1,4 @@
+#if canImport(OpenSSL)
 internal import OpenSSL
 
 extension RSA {
@@ -218,3 +219,4 @@ extension RSA.PrivateKey {
         }
     }
 }
+#endif
