@@ -1,3 +1,4 @@
+#if canImport(OpenSSL)
 internal import OpenSSL
 
 extension RSA {
@@ -15,10 +16,14 @@ extension RSA {
 extension RSA.PrivateKey: @unchecked Sendable {}
 extension RSA.PrivateKey {
     /// Parses a PEM-encoded private key.
-    public init(pem: borrowing String) throws(CryptographyError) {
+    @inlinable public init(pem: borrowing String) throws(CryptographyError) {
+        try self.init(pem: pem[...])
+    }
+
+    public init(pem: borrowing Substring) throws(CryptographyError) {
         let unmanaged: OpaquePointer = try CryptographyError.do {
             /// we expect this to be a no-op, if the PEM string is already UTF-8
-            var pem: String = copy pem
+            var pem: Substring = copy pem
             return pem.withUTF8 {
                 guard
                 let bio: OpaquePointer = BIO_new_mem_buf(
@@ -65,11 +70,25 @@ extension RSA.PrivateKey {
 }
 extension RSA.PrivateKey {
     public func sign(
-        hashing message: String,
+        hashing message: ArraySlice<UInt8>,
         padding: RSA.SignaturePaddingMode,
         algorithm: CryptographyHashType = .sha512
     ) throws -> [UInt8] {
-        var message: String = message
+        try message.withUnsafeBytes {
+            try self.sign(
+                hashing: $0,
+                padding: padding,
+                algorithm: algorithm
+            )
+        }
+    }
+
+    public func sign(
+        hashing message: Substring,
+        padding: RSA.SignaturePaddingMode,
+        algorithm: CryptographyHashType = .sha512
+    ) throws -> [UInt8] {
+        var message: Substring = message
         return try message.withUTF8 {
             try self.sign(
                 hashing: UnsafeRawBufferPointer.init($0),
@@ -78,6 +97,7 @@ extension RSA.PrivateKey {
             )
         }
     }
+
     public func sign(
         hashing message: UnsafeRawBufferPointer,
         padding: RSA.SignaturePaddingMode,
@@ -199,3 +219,4 @@ extension RSA.PrivateKey {
         }
     }
 }
+#endif
