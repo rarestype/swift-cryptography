@@ -21,7 +21,7 @@ let package: Package = .init(
         .target(
             name: "Cryptography",
             dependencies: [
-                .target(name: "OpenSSL"),
+                .target(name: "OpenSSL", condition: .when(platforms: [.linux]))
             ]
         ),
         .testTarget(
